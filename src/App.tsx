@@ -1,83 +1,48 @@
-import { useEffect, useState } from "react";
 import { Checkbox } from "@mui/material";
-import { useForm, Controller, useWatch } from "react-hook-form";
+import { useState } from "react";
 
-type FormValues = {
-  checked1: boolean;
-  checked2: boolean;
-  checked3: boolean;
-  checked4: boolean;
-};
+const options = ["Selected Item 1", "Selected Item 2", "Selected Item 3"];
 
-function App() {
-  const { register, setValue, getValues, handleSubmit, control } =
-    useForm<FormValues>();
+export default function App() {
+  const [selected, setSelected] = useState<any>([]);
+  const isAllSelected =
+    options.length > 0 && selected.length === options.length;
 
-  console.log(getValues());
-  const values = useWatch({
-    control,
+  const handleChange = (event: any) => {
+    const value = event.target.value;
+    console.log(value);
+    if (value === "all") {
+      setSelected(selected.length === options.length ? [] : options);
+      return;
+    }
+    if (selected.indexOf(value) !== -1) {
+      // if value already present
+      const newSelected = selected.filter((s: any) => s !== value);
+      setSelected(newSelected);
+    } else {
+      // if value not present
+      setSelected([...selected, value]);
+    }
+  };
+
+  const listItem = options.map((option: any) => {
+    return (
+      <div key={option}>
+        <Checkbox
+          value={option}
+          onChange={handleChange}
+          checked={selected.includes(option)}
+        />
+        <span>{option}</span>
+      </div>
+    );
   });
 
-  useEffect(() => {
-    console.log(values);
-  }, [values]);
-
   return (
-    <form onSubmit={handleSubmit((data) => console.log(data))}>
-      <Controller
-        control={control}
-        name="checked1"
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Checkbox
-            onBlur={onBlur} // notify when input is touched
-            onChange={onChange} // send value to hook form
-            checked={value}
-            inputRef={ref}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="checked2"
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Checkbox
-            onBlur={onBlur} // notify when input is touched
-            onChange={onChange} // send value to hook form
-            checked={value}
-            inputRef={ref}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="checked3"
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Checkbox
-            onBlur={onBlur} // notify when input is touched
-            onChange={onChange} // send value to hook form
-            checked={value}
-            inputRef={ref}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="checked4"
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Checkbox
-            onBlur={onBlur} // notify when input is touched
-            onChange={onChange} // send value to hook form
-            checked={value}
-            inputRef={ref}
-          />
-        )}
-      />
-
-      <input type="submit" />
-    </form>
+    <div style={{ display: "flex", alignItems: "center", margin: 10 }}>
+      <Checkbox value="all" onChange={handleChange} checked={isAllSelected} />
+      <span> Select All</span>
+      {listItem}
+    </div>
   );
 }
-export default App;
