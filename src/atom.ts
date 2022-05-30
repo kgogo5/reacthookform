@@ -9,5 +9,3 @@ export const dialogStatus = atom({
     description: "",
   },
 });
-
-console.log(dialogStatus);
