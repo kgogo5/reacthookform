@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import { RecoilRoot } from "recoil";
+import DialogContainer from "./DialogContainer";
 import Video from "./Video";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
-    <Video />
+    <RecoilRoot>
+      <DialogContainer />
+      <Video />
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById("root")
 );

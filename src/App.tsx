@@ -1,10 +1,14 @@
-import { Checkbox, TextField } from "@mui/material";
+import { Box, Button, Checkbox, TextField } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
+import { dialogStatus } from "./atom";
+import ReactDialog from "./ReactDialog";
 
 const options = ["Selected Item 1", "Selected Item 2", "Selected Item 3"];
 
 export default function App() {
+  const [dialogOpen, setDialogOpen] = useRecoilState(dialogStatus);
   const { register, handleSubmit, getValues, setError } = useForm();
   const [selected, setSelected] = useState<any>([]);
   const isAllSelected =
@@ -77,33 +81,46 @@ export default function App() {
     );
   });
 
+  const customDialog = () => {
+    setDialogOpen({
+      open: true,
+      title: "얼럿 타이틀",
+      description: "얼럿 임의 내용 입력 가능",
+    });
+  };
+
   return (
-    <div style={{ display: "flex", alignItems: "center", margin: 10 }}>
-      <Checkbox value="all" onChange={handleChange} checked={isAllSelected} />
-      <span> Select All</span>
-      {listItem}
+    <>
+      <div style={{ display: "flex", alignItems: "center", margin: 10 }}>
+        <Checkbox value="all" onChange={handleChange} checked={isAllSelected} />
+        <span> Select All</span>
+        {listItem}
 
-      <form onSubmit={onSubmit}>
-        <TextField
-          size="small"
-          label="비밀번호 *"
-          type="password"
-          {...register("password", {
-            required: "비밀번호를 입력해주세요.",
-            // pattern: {
-            //   value:
-            //     /^(?=^.{10,16}$)(((?=.*\d)(?=.*[a-z])(?=.*[A-Z]))|((?=.*[!@#$%._])(?=.*[a-z])(?=.*[A-Z]))|((?=.*\d)(?=.*[!@#$%._])(?=.*[a-z])(?=.*[A-Z])))[a-zA-Z0-9!@#$%._]*$/,
+        <form onSubmit={onSubmit}>
+          <TextField
+            size="small"
+            label="비밀번호 *"
+            type="password"
+            {...register("password", {
+              required: "비밀번호를 입력해주세요.",
+              // pattern: {
+              //   value:
+              //     /^(?=^.{10,16}$)(((?=.*\d)(?=.*[a-z])(?=.*[A-Z]))|((?=.*[!@#$%._])(?=.*[a-z])(?=.*[A-Z]))|((?=.*\d)(?=.*[!@#$%._])(?=.*[a-z])(?=.*[A-Z])))[a-zA-Z0-9!@#$%._]*$/,
 
-            //   message:
-            //     "대소문자, 숫자, 특수문자 세가지 조합 이상 8자 이상의 비밀번호 구성",
-            // },
-            validate: {
-              pattern: () => validate(),
-            },
-          })}
-        />
-        <button onClick={() => onSubmit()}>submit</button>
-      </form>
-    </div>
+              //   message:
+              //     "대소문자, 숫자, 특수문자 세가지 조합 이상 8자 이상의 비밀번호 구성",
+              // },
+              validate: {
+                pattern: () => validate(),
+              },
+            })}
+          />
+          <button onClick={() => onSubmit()}>submit</button>
+        </form>
+      </div>
+      <Box>
+        <Button onClick={() => customDialog()}>열기</Button>
+      </Box>
+    </>
   );
 }
