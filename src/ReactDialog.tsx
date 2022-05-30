@@ -10,7 +10,7 @@ import {
 import { useRecoilState } from "recoil";
 import { dialogStatus } from "./atom";
 
-const ReactDialog = ({ props }: any) => {
+const ReactDialog = () => {
   const [dialogOpen, setDialogOpen] = useRecoilState(dialogStatus);
 
   return (
